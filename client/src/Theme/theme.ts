@@ -45,6 +45,30 @@ const theme = {
       "800": "#103F56",
       "900": "#081F2B",
     },
+    dark: {
+      "50": "#f6f7f8",
+      "100": "#dce1e3",
+      "200": "#bec7cb",
+      "300": "#9aa8ae",
+      "400": "#85979e",
+      "500": "#6b8088",
+      "600": "#546d76",
+      "700": "#3c5963",
+      "800": "#2d4b57",
+      "900": "#153744",
+    },
+    light: {
+      "50": "#eafbf8",
+      "100": "#c7e7e1",
+      "200": "#afcbc6",
+      "300": "#93aba6",
+      "400": "#849995",
+      "500": "#6f817d",
+      "600": "#5d6c6a",
+      "700": "#4b5755",
+      "800": "#3f4948",
+      "900": "#2e3534",
+    },
   },
   components: {
     Button,
@@ -57,10 +81,11 @@ const theme = {
     global: (props: StyleFunctionProps) => ({
       body: {
         margin: 0,
-        bg: mode("#eaf6fa", "#0e313e")(props),
+        bg: mode("light.50", "dark.900")(props),
       },
     }),
   },
 }
-
+//#eaf6fa
+//#0e313e
 export default extendTheme(theme)

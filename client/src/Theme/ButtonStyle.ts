@@ -31,6 +31,12 @@ export const ButtonStyles = defineStyleConfig({
         bg: mode("secondary.700", "secondary.500")(props),
       },
     }),
+    dynamic: (props) => ({
+      bg: mode("secondary.100", "primary.700")(props),
+      _hover: {
+        bg: mode("secondary.200", "primary.600")(props),
+      },
+    }),
   },
   // The default `size` or `variant` values
   defaultProps: {},
