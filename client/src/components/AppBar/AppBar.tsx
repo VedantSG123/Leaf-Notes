@@ -21,6 +21,7 @@ import { useEffect, useState } from "react"
 
 function AppBar() {
   const [user, setUser] = useState<UserData | null>(null)
+
   useEffect(() => {
     const getUser = () => {
       const userdata = getUserDataFromLocalStorage()
@@ -33,7 +34,14 @@ function AppBar() {
   const { colorMode, toggleColorMode } = useColorMode()
   return (
     <>
-      <Box bg={useColorModeValue("light.50", "tertiary.900")} px={4}>
+      <Box
+        bg={useColorModeValue("light.50", "dark.900")}
+        px={4}
+        width={"100%"}
+        position={"sticky"}
+        top={0}
+        zIndex={100}
+      >
         <Flex h={20} alignItems={"center"} justifyContent={"space-between"}>
           <Flex alignItems={"center"}>
             <Box>

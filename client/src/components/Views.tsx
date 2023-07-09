@@ -4,8 +4,7 @@ import Login from "./Login/Login"
 import SignUp from "./Login/SignUp"
 import Home from "./Home/Home"
 import Notes from "./Notes/Notes"
-
-
+import Editor from "./Editor/Editor"
 
 const Views = () => {
   return (
@@ -16,6 +15,7 @@ const Views = () => {
       <Route path="/register" element={<SignUp />} />
       <Route path="/home" element={<Home />}>
         <Route path="notes" element={<Notes />} />
+        <Route path="editor" element={<Editor />} />
       </Route>
     </Routes>
   )
