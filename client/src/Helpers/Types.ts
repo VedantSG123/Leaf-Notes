@@ -1,3 +1,5 @@
+import { DeltaStatic, Delta } from "quill"
+
 interface User {
   _id: string
   password: string
@@ -9,10 +11,11 @@ interface User {
 interface Note {
   _id: string
   title: string
-  content: object
+  content: DeltaStatic
   color: string
   length: number
   isGroupNote: boolean
+  isDeleted: boolean
   collaborators: Array<User["_id"]>
   author: User["_id"]
 }
@@ -34,9 +37,10 @@ interface Collaborator {
 const emptyNote: Note = {
   _id: "",
   title: "",
-  content: {},
+  content: new Delta(),
   color: "",
   length: 0,
+  isDeleted: false,
   isGroupNote: false,
   collaborators: [],
   author: "",

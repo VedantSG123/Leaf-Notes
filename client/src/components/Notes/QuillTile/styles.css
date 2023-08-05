@@ -1,4 +1,12 @@
+.quill-tile {
+  margin-top: 0 !important;
+}
+
 .ql-editor {
   cursor: pointer;
+  overflow: hidden !important;
+}
+
+.ql-container {
   overflow: hidden;
 }

@@ -35,7 +35,7 @@ function AppBar() {
   return (
     <>
       <Box
-        bg={useColorModeValue("light.50", "dark.900")}
+        bg={useColorModeValue("light.50", "main.900")}
         px={4}
         width={"100%"}
         position={"sticky"}

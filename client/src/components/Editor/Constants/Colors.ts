@@ -45,7 +45,7 @@ const colors: Array<Color> = [
     dark: "#442f19",
   },
   {
-    light: "#e8eaed",
+    light: "#eafbf8",
     dark: "#3c3f43",
   },
 ]

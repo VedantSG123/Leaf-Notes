@@ -12,11 +12,18 @@ import "./picker.css"
 interface properties {
   undo: () => void
   redo: () => void
+  back: () => void
   noteColor: Color
   setNoteColor: (current: Color) => void
 }
 
-function SecondaryToolBar({ undo, redo, noteColor, setNoteColor }: properties) {
+function SecondaryToolBar({
+  undo,
+  redo,
+  noteColor,
+  setNoteColor,
+  back,
+}: properties) {
   const { colorMode } = useColorMode()
   const [colorPicker, setColorPicker] = useState(false)
   const [selected, setSelected] = useState<Color>(noteColor)
@@ -29,27 +36,24 @@ function SecondaryToolBar({ undo, redo, noteColor, setNoteColor }: properties) {
         <Box>
           <Button
             variant={"ghost"}
-            leftIcon={<Icon as={IoMdArrowRoundBack} boxSize={6} />}
-            size={"md"}
+            leftIcon={<Icon as={IoMdArrowRoundBack} boxSize={5} />}
+            onClick={back}
           />
           <Button
             variant={"ghost"}
-            leftIcon={<Icon as={IoMdUndo} boxSize={6} />}
+            leftIcon={<Icon as={IoMdUndo} boxSize={5} />}
             onClick={undo}
-            size={"md"}
           />
           <Button
             variant={"ghost"}
-            leftIcon={<Icon as={IoMdRedo} boxSize={6} />}
+            leftIcon={<Icon as={IoMdRedo} boxSize={5} />}
             onClick={redo}
-            size={"md"}
           />
         </Box>
-        <Box>
+        <Box position={"relative"}>
           <Button
             variant={"ghost"}
-            leftIcon={<Icon as={IoMdColorPalette} boxSize={6} />}
-            size={"md"}
+            leftIcon={<Icon as={IoMdColorPalette} boxSize={5} />}
             onClick={handlePalleteClick}
           />
           <div

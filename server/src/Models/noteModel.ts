@@ -7,6 +7,7 @@ interface INote extends mongoose.Document {
   color: string
   length: number
   isGroupNote: boolean
+  isDeleted: boolean
   collaborators: Array<IUser["_id"]>
   author: IUser["_id"]
 }
@@ -17,6 +18,7 @@ const noteModel = new mongoose.Schema<INote>(
     content: { type: Object, default: {} },
     color: { type: String, default: "#fff" },
     length: { type: Number, default: 0 },
+    isDeleted: { type: Boolean, default: false },
     isGroupNote: { type: Boolean, default: false },
     collaborators: [
       {

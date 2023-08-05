@@ -15,6 +15,7 @@ function Home() {
     }
     verifyUser()
   }, [])
+
   return (
     <>
       <AppBar />

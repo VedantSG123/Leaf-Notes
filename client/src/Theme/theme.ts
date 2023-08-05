@@ -69,6 +69,18 @@ const theme = {
       "800": "#3f4948",
       "900": "#2e3534",
     },
+    main: {
+      "50": "#F1F2F4",
+      "100": "#D7DCE0",
+      "200": "#BDC5CC",
+      "300": "#A3AFB8",
+      "400": "#8998A4",
+      "500": "#6F8290",
+      "600": "#596873",
+      "700": "#434E56",
+      "800": "#2D3439",
+      "900": "#161A1D",
+    },
   },
   components: {
     Button,
@@ -81,7 +93,7 @@ const theme = {
     global: (props: StyleFunctionProps) => ({
       body: {
         margin: 0,
-        bg: mode("light.50", "dark.900")(props),
+        bg: mode("light.50", "main.900")(props),
       },
     }),
   },

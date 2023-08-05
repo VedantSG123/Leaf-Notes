@@ -44,8 +44,9 @@
   border: none !important;
   max-width: 8.27in;
   margin: 30px auto;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  outline: 1px solid #c7c7c7;
+  /* box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); */
+  box-shadow: 0 7px 15px 0 rgba(0, 0, 0, 0.13), 0 1px 4px 0 rgba(0, 0, 0, 0.11);
+  /* outline: 1px solid #c7c7c7; */
   min-height: 100vh;
 }
 
@@ -68,5 +69,6 @@
 
   .quill {
     margin: 0 auto;
+    box-shadow: none;
   }
 }

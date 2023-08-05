@@ -41,18 +41,25 @@ function QuillTile({ note }: properties) {
   return (
     <>
       <div
-        ref={quillRef}
-        id="quill-editor"
         style={{
-          backgroundColor: note.color,
           width: "100%",
           height: "100%",
-          color: colorMode === "dark" ? "black" : "black",
-          boxSizing: "border-box",
-          cursor: "pointer",
-          overflow: "hidden",
         }}
-      ></div>
+      >
+        <div
+          ref={quillRef}
+          id="quill-editor"
+          style={{
+            backgroundColor: note.color,
+            width: "100%",
+            height: "100%",
+            color: colorMode === "dark" ? "black" : "black",
+            boxSizing: "border-box",
+            cursor: "pointer",
+            overflow: "hidden",
+          }}
+        ></div>
+      </div>
     </>
   )
 }

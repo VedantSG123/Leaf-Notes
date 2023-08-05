@@ -20,8 +20,19 @@ export const PersonalSlice = createSlice({
     setPersonalNotesArray: (state, action: PayloadAction<AppNote[]>) => {
       state.notesArray = action.payload
     },
+    updatePersonalNoteAtIndex: (
+      state,
+      action: PayloadAction<{ index: number; updatedNote: AppNote }>
+    ) => {
+      const { index, updatedNote } = action.payload
+      if (index >= 0 && index < state.notesArray.length) {
+        state.notesArray[index] = updatedNote
+      }
+    },
   },
 })
 
-export const { setPersonalNotesArray } = PersonalSlice.actions
+export const { setPersonalNotesArray, updatePersonalNoteAtIndex } =
+  PersonalSlice.actions
+export type { AppNote }
 export default PersonalSlice.reducer

@@ -14,7 +14,8 @@ const Views = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<SignUp />} />
       <Route path="/home" element={<Home />}>
-        <Route path="notes" element={<Notes />} />
+        <Route path="notes" element={<Notes />}></Route>
+        <Route path="edit/:noteId" element={<Editor />} />
         <Route path="editor" element={<Editor />} />
       </Route>
     </Routes>
