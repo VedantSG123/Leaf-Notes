@@ -5,6 +5,8 @@ import {
   getNotes,
   getANote,
   moveToTrash,
+  recoverFromTrash,
+  getTrashNotes,
 } from "../Controllers/noteControllers"
 
 const router = express.Router()
@@ -13,5 +15,7 @@ router.post("/createNote", protect, createNote)
 router.get("/getNotes", protect, getNotes)
 router.get("/getANote", protect, getANote)
 router.get("/moveToTrash", protect, moveToTrash)
+router.get("/recoverFromTrash", protect, recoverFromTrash)
+router.get("/getTrashNotes", protect, getTrashNotes)
 
 export default router

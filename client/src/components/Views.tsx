@@ -5,6 +5,7 @@ import SignUp from "./Login/SignUp"
 import Home from "./Home/Home"
 import Notes from "./Notes/Notes"
 import Editor from "./Editor/Editor"
+import Trash from "./Notes/Trash/Trash"
 
 const Views = () => {
   return (
@@ -15,6 +16,7 @@ const Views = () => {
       <Route path="/register" element={<SignUp />} />
       <Route path="/home" element={<Home />}>
         <Route path="notes" element={<Notes />}></Route>
+        <Route path="trash" element={<Trash />} />
         <Route path="edit/:noteId" element={<Editor />} />
         <Route path="editor" element={<Editor />} />
       </Route>

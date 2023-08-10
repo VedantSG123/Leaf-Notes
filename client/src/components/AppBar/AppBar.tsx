@@ -14,14 +14,25 @@ import {
   Center,
   Image,
   Heading,
+  useDisclosure,
+  ModalOverlay,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
 } from "@chakra-ui/react"
 import { MoonIcon, SunIcon } from "@chakra-ui/icons"
-import { getUserDataFromLocalStorage, UserData } from "../../Helpers/Verify"
 import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { getUserDataFromLocalStorage, UserData } from "../../Helpers/Verify"
+import { deleteUserDataFromLocalStorage } from "../../Helpers/Verify"
 
 function AppBar() {
   const [user, setUser] = useState<UserData | null>(null)
-
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const navigate = useNavigate()
   useEffect(() => {
     const getUser = () => {
       const userdata = getUserDataFromLocalStorage()
@@ -32,6 +43,11 @@ function AppBar() {
     getUser()
   })
   const { colorMode, toggleColorMode } = useColorMode()
+
+  const logout = () => {
+    deleteUserDataFromLocalStorage()
+    navigate("/login")
+  }
   return (
     <>
       <Box
@@ -75,25 +91,40 @@ function AppBar() {
                 <MenuList alignItems={"center"}>
                   <br />
                   <Center>
-                    <Avatar
-                      size={"2xl"}
-                      src={"https://avatars.dicebear.com/api/male/username.svg"}
-                    />
+                    <Avatar size={"2xl"} name={user?.data.name} />
                   </Center>
                   <br />
                   <Center>
-                    <p>Username</p>
+                    <p>{user?.data.name}</p>
                   </Center>
                   <br />
                   <MenuDivider />
-                  <MenuItem>Your Servers</MenuItem>
+                  <MenuItem onClick={() => navigate("/home/trash")}>
+                    Recycle Bin
+                  </MenuItem>
                   <MenuItem>Account Settings</MenuItem>
-                  <MenuItem>Logout</MenuItem>
+                  <MenuItem onClick={onOpen}>Logout</MenuItem>
                 </MenuList>
               </Menu>
             </Stack>
           </Flex>
         </Flex>
+        <Modal onClose={onClose} isOpen={isOpen} isCentered>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Logout ?</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody></ModalBody>
+            <ModalFooter>
+              <Button onClick={logout} variant={"secondary"}>
+                Logout
+              </Button>
+              <Button ml={2} onClick={onClose}>
+                Cancel
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
       </Box>
     </>
   )

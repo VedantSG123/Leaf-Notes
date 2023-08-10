@@ -68,13 +68,10 @@ const moveToTrash = asynchandler(async (req: AuthRequest, res: Response) => {
       )
 
       if (updatedNote) {
-        console.log(updatedNote)
-        res
-          .status(200)
-          .json({
-            message: "Note moved to trash successfully.",
-            note: updatedNote,
-          })
+        res.status(200).json({
+          message: "Note moved to trash successfully.",
+          note: updatedNote,
+        })
       } else {
         res
           .status(400)
@@ -84,9 +81,63 @@ const moveToTrash = asynchandler(async (req: AuthRequest, res: Response) => {
       res.status(400).json({ message: "No such note exists." })
     }
   } catch (err) {
-    console.error(err)
     res.status(500).json({ message: "Internal server error." })
   }
 })
 
-export { createNote, getNotes, getANote, moveToTrash }
+const recoverFromTrash = asynchandler(
+  async (req: AuthRequest, res: Response) => {
+    const noteID = req.query.noteId
+
+    try {
+      const note = await Note.findOne({ _id: noteID })
+
+      if (note) {
+        const updatedNote = await Note.findByIdAndUpdate(
+          noteID,
+          { ...note.toObject(), isDeleted: false },
+          { new: true }
+        )
+
+        if (updatedNote) {
+          res.status(200).json({
+            message: "Note moved to trash successfully.",
+            note: updatedNote,
+          })
+        } else {
+          res
+            .status(400)
+            .json({ message: "Note not found or could not be updated." })
+        }
+      } else {
+        res.status(400).json({ message: "No such note exists." })
+      }
+    } catch (err) {
+      res.status(500).json({ message: "Internal server error." })
+    }
+  }
+)
+
+const getTrashNotes = asynchandler(async (req: AuthRequest, res: Response) => {
+  const user = req.user?._id
+  const notes: Array<INote> = await Note.find({
+    author: user,
+    isDeleted: true,
+  }).sort({ updatedAt: -1 })
+  if (notes) {
+    res.status(201)
+    res.json(notes)
+  } else {
+    res.status(400)
+    throw new Error("Faild to get the notes")
+  }
+})
+
+export {
+  createNote,
+  getNotes,
+  getANote,
+  moveToTrash,
+  recoverFromTrash,
+  getTrashNotes,
+}

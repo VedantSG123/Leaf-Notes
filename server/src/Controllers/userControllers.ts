@@ -51,6 +51,9 @@ const authUser = asynchandler(async (req: Request, res: Response) => {
       email: user.email,
       token: generateToken(user._id),
     })
+  } else {
+    res.status(200)
+    throw new Error("Password Verification Failed")
   }
 })
 

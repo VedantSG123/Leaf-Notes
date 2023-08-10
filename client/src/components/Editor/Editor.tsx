@@ -1,6 +1,7 @@
 import ReactQuill from "react-quill"
 import { Container, Box, useColorModeValue, Input } from "@chakra-ui/react"
 import { useEffect, useRef, useState } from "react"
+import { DeltaStatic } from "quill"
 import CustomToolbar from "./CustomToolbar"
 import SecondaryToolBar from "./SecondaryToolBar"
 import { colorCalc, Color } from "./Constants/Colors"
@@ -18,6 +19,7 @@ function Editor() {
   const editorRef = useRef<ReactQuill>(null)
   const mainRef = useRef<HTMLDivElement>(null)
   const [noteColor, setNoteColor] = useState<Color>(colorCalc("#e8eaed"))
+  const [note, setNote] = useState<DeltaStatic>()
   const Undo = () => {
     if (!editorRef.current) return
     ;(editorRef.current.getEditor() as any).history.undo()
@@ -78,10 +80,11 @@ function Editor() {
         const getANote = await axios.get(
           `http://localhost:5000/api/notes/getANote?noteId=${noteId}`
         )
-        const editor = editorRef.current?.getEditor()
+        //const editor = editorRef.current?.getEditor()
         setTitle(getANote.data.title)
         setNoteColor(colorCalc(getANote.data.color))
-        editor?.setContents(getANote.data.content)
+        //editor?.setContents(getANote.data.content)
+        setNote(getANote.data.content)
       } catch (err) {
         console.log(err)
       }
@@ -114,7 +117,7 @@ function Editor() {
       >
         <Box
           className="tool-bar-main"
-          bg={useColorModeValue("light.50", "dark.900")}
+          bg={useColorModeValue("light.50", "main.900")}
         >
           <Box pr={2} pl={2}>
             <Input
@@ -142,6 +145,7 @@ function Editor() {
           modules={modules}
           formats={formats}
           theme={"snow"}
+          value={note}
           style={{
             backgroundColor: useColorModeValue(noteColor.light, noteColor.dark),
           }}

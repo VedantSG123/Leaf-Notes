@@ -15,10 +15,11 @@ import { HiMiniEllipsisVertical } from "react-icons/hi2"
 interface properties {
   title: string
   isGroup: boolean
+  isDeleted: boolean
   trash: () => void
 }
 
-function SubTile({ title, isGroup, trash }: properties) {
+function SubTile({ title, isGroup, trash, isDeleted }: properties) {
   return (
     <>
       <Box
@@ -50,7 +51,9 @@ function SubTile({ title, isGroup, trash }: properties) {
                 <Icon as={HiMiniEllipsisVertical} />
               </MenuButton>
               <MenuList>
-                <MenuItem onClick={trash}>Move to Trash</MenuItem>
+                <MenuItem onClick={trash}>
+                  {isDeleted ? "Restore" : "Move to Trash"}
+                </MenuItem>
               </MenuList>
             </Menu>
           </Box>

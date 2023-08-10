@@ -18,6 +18,13 @@ const getUserDataFromLocalStorage = (): UserData | null => {
   return null
 }
 
+const deleteUserDataFromLocalStorage = () => {
+  const userDataString = localStorage.getItem("userInfo")
+  if (userDataString) {
+    localStorage.removeItem("userInfo")
+  }
+}
+
 const verificationReq = async (): Promise<boolean> => {
   try {
     const response: AxiosResponse = await axios.get(
@@ -41,5 +48,5 @@ const verify = async (): Promise<boolean> => {
   }
 }
 
-export { verify, getUserDataFromLocalStorage }
+export { verify, getUserDataFromLocalStorage, deleteUserDataFromLocalStorage }
 export type { UserData }
