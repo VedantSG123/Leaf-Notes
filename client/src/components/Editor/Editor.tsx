@@ -80,10 +80,8 @@ function Editor() {
         const getANote = await axios.get(
           `http://localhost:5000/api/notes/getANote?noteId=${noteId}`
         )
-        //const editor = editorRef.current?.getEditor()
         setTitle(getANote.data.title)
         setNoteColor(colorCalc(getANote.data.color))
-        //editor?.setContents(getANote.data.content)
         setNote(getANote.data.content)
       } catch (err) {
         console.log(err)

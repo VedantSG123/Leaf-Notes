@@ -10,9 +10,11 @@ import { getAllNotesRequest } from "../../../Helpers/Requests/getAllNotesRequest
 import { createNewNoteRequest } from "../../../Helpers/Requests/createNewNote"
 import { moveToTrashRequest } from "../../../Helpers/Requests/moveToTrashRequest"
 import { AppNote } from "../../../Redux/Slices/PersonalSlice"
+import TileSkeleton from "../TileSkeleton/TileSkeleton"
 
 function Personal() {
-  const [renderArray, setRenderArray] = useState<AppNote[]>([])
+  const [renderArray, setRenderArray] = useState<AppNote[]>()
+  const loaderCount = Array.from({ length: 10 }, (_, index) => index + 1)
   const ParentRef = useRef<HTMLDivElement>(null!)
   const navigate = useNavigate()
   useEffect(() => {
@@ -48,14 +50,20 @@ function Personal() {
 
   const moveToTrash = async (index: number) => {
     const userData = getUserDataFromLocalStorage()
-    if (userData && index >= 0 && index < renderArray.length) {
-      try {
-        await moveToTrashRequest(userData.data.token, renderArray[index]._id)
-        setRenderArray((prevState) => {
-          return prevState.filter((_, ind) => ind !== index)
-        })
-      } catch (err) {
-        console.log(err)
+    if (renderArray) {
+      if (userData && index >= 0 && index < renderArray.length) {
+        try {
+          await moveToTrashRequest(userData.data.token, renderArray[index]._id)
+          setRenderArray((prevState) => {
+            if (prevState) {
+              return prevState.filter((_, ind) => ind !== index)
+            } else {
+              return prevState
+            }
+          })
+        } catch (err) {
+          console.log(err)
+        }
       }
     }
   }
@@ -80,33 +88,38 @@ function Personal() {
               <Box mt={"10px"}>Create A Note</Box>
             </VStack>
           </Box>
-          {renderArray.map((note, index) => {
-            return (
-              <Box key={index} height={"280px"} maxW={"180px"}>
-                <Link to={`/home/edit/${note._id}`}>
-                  <Box
-                    height={"200px"}
-                    sx={{ overflow: "hidden" }}
-                    maxW={"180px"}
-                    width={"100%"}
-                    as={Button}
-                    borderRadius={0}
-                    padding={0}
-                  >
-                    <QuillTile key={index} note={note} />
+          {renderArray
+            ? renderArray.map((note, index) => {
+                return (
+                  <Box key={index} height={"280px"} maxW={"180px"}>
+                    <Link to={`/home/edit/${note._id}`}>
+                      <Box
+                        height={"200px"}
+                        sx={{ overflow: "hidden" }}
+                        maxW={"180px"}
+                        width={"100%"}
+                        as={Button}
+                        borderRadius={0}
+                        padding={0}
+                      >
+                        <QuillTile key={index} note={note} />
+                      </Box>
+                    </Link>
+                    <SubTile
+                      title={note.title}
+                      isGroup={note.isGroupNote}
+                      isDeleted={note.isDeleted}
+                      trash={() => {
+                        moveToTrash(index)
+                      }}
+                      deleteNote={() => console.log("cannot delete from here")}
+                    />
                   </Box>
-                </Link>
-                <SubTile
-                  title={note.title}
-                  isGroup={note.isGroupNote}
-                  isDeleted={note.isDeleted}
-                  trash={() => {
-                    moveToTrash(index)
-                  }}
-                />
-              </Box>
-            )
-          })}
+                )
+              })
+            : loaderCount.map((loaderNo) => {
+                return <TileSkeleton key={loaderNo} />
+              })}
         </SimpleGrid>
       </Container>
     </>

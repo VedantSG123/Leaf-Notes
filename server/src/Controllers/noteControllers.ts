@@ -133,6 +133,31 @@ const getTrashNotes = asynchandler(async (req: AuthRequest, res: Response) => {
   }
 })
 
+const deletePermanent = asynchandler(
+  async (req: AuthRequest, res: Response) => {
+    const noteID = req.query.noteId
+    const deletedNote = await Note.findById(noteID)
+    if (deletedNote) {
+      if (deletedNote.isDeleted) {
+        const deleted = await Note.findByIdAndDelete(deletedNote._id)
+        if (!deleted) {
+          res.status(500)
+          throw new Error("Internal server error")
+        } else {
+          res.status(200)
+          res.json({ message: `Successfully deleted:${noteID}` })
+        }
+      } else {
+        res.status(403)
+        throw new Error("Cannot delete this note")
+      }
+    } else {
+      res.status(403)
+      throw new Error("Document does not exits")
+    }
+  }
+)
+
 export {
   createNote,
   getNotes,
@@ -140,4 +165,5 @@ export {
   moveToTrash,
   recoverFromTrash,
   getTrashNotes,
+  deletePermanent,
 }
