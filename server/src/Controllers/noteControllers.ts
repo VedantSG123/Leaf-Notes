@@ -158,6 +158,26 @@ const deletePermanent = asynchandler(
   }
 )
 
+const updateANote = asynchandler(async (req: AuthRequest, res: Response) => {
+  const newNote = req.body
+  console.log(newNote)
+  // const isCorretType = Note.schema.obj.constructor(req.body) === Object
+  // if (!isCorretType) {
+  //   res.status(400)
+  //   throw new Error("Invalid content format")
+  // }
+  const newDoc = new Note(newNote)
+  const updatedNote = await Note.findByIdAndUpdate(newDoc._id, newDoc, {
+    new: true,
+  })
+  if (updatedNote) {
+    res.status(200).json(updatedNote)
+  } else {
+    res.status(400)
+    throw new Error("Failed to update content")
+  }
+})
+
 export {
   createNote,
   getNotes,
@@ -166,4 +186,5 @@ export {
   recoverFromTrash,
   getTrashNotes,
   deletePermanent,
+  updateANote,
 }

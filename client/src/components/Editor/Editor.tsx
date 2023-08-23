@@ -1,15 +1,17 @@
 import ReactQuill from "react-quill"
 import { Container, Box, useColorModeValue, Input } from "@chakra-ui/react"
 import { useEffect, useRef, useState } from "react"
-import { DeltaStatic } from "quill"
+import { DeltaStatic, Sources } from "quill"
+import { io, Socket } from "socket.io-client"
+import "./styles.css"
+import "react-quill/dist/quill.snow.css"
 import CustomToolbar from "./CustomToolbar"
 import SecondaryToolBar from "./SecondaryToolBar"
 import { colorCalc, Color } from "./Constants/Colors"
 import { useParams, useNavigate } from "react-router-dom"
 import axios from "axios"
 import { getUserDataFromLocalStorage } from "../../Helpers/Verify"
-import "./styles.css"
-import "react-quill/dist/quill.snow.css"
+import update from "../../Helpers/Requests/updateNoteData"
 
 type EditorParams = {
   noteId: string
@@ -18,22 +20,16 @@ type EditorParams = {
 function Editor() {
   const editorRef = useRef<ReactQuill>(null)
   const mainRef = useRef<HTMLDivElement>(null)
+  const titleRef = useRef<HTMLInputElement>(null)
+  const { noteId } = useParams<EditorParams>()
+  const [loaded, setLoaded] = useState(false)
+  const [disable, setDisable] = useState(true)
   const [noteColor, setNoteColor] = useState<Color>(colorCalc("#e8eaed"))
-  const [note, setNote] = useState<DeltaStatic>()
-  const Undo = () => {
-    if (!editorRef.current) return
-    ;(editorRef.current.getEditor() as any).history.undo()
-  }
+  const [socket, setSocket] = useState<Socket>()
+  const userData = getUserDataFromLocalStorage()
+  const navigate = useNavigate()
 
-  const Redo = () => {
-    if (!editorRef.current) return
-    ;(editorRef.current.getEditor() as any).history.redo()
-  }
-
-  const handleColorChange = (current: Color) => {
-    setNoteColor(current)
-  }
-
+  //editor configuration
   const modules = {
     toolbar: {
       container: ".leaf-tool-bar",
@@ -67,43 +63,105 @@ function Editor() {
     "formula",
   ]
 
-  //Actual note rendering
-  const { noteId } = useParams<EditorParams>()
-  const [title, setTitle] = useState("")
-  const navigate = useNavigate()
+  //handle buttons
+  const Undo = () => {
+    if (!editorRef.current) return
+    ;(editorRef.current.getEditor() as any).history.undo()
+  }
 
-  useEffect(() => {
-    if (!editorRef.current || !mainRef.current) return
-    const userData = getUserDataFromLocalStorage()
-    const NotesRequest = async () => {
-      try {
-        const getANote = await axios.get(
-          `http://localhost:5000/api/notes/getANote?noteId=${noteId}`
-        )
-        setTitle(getANote.data.title)
-        setNoteColor(colorCalc(getANote.data.color))
-        setNote(getANote.data.content)
-      } catch (err) {
-        console.log(err)
-      }
+  const Redo = () => {
+    if (!editorRef.current) return
+    ;(editorRef.current.getEditor() as any).history.redo()
+  }
+
+  const handleColorChange = (current: Color) => {
+    setNoteColor(current)
+    if (socket && editorRef.current && noteId) {
+      update(noteId, "color", current.light, editorRef.current, socket)
     }
-    if (userData) {
-      axios.defaults.headers.common[
-        "Authorization"
-      ] = `Bearer ${userData.data.token}`
-      NotesRequest()
-    } else {
-      mainRef.current.innerHTML =
-        "<p>Cannot find note with given ID or user Authentication failed</p>"
-    }
-  }, [])
+  }
 
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTitle(event.target.value)
+    if (socket && editorRef.current && noteId && titleRef.current) {
+      update(noteId, "title", event.target.value, editorRef.current, socket)
+    }
   }
 
   const handleBack = () => {
     navigate("/home/notes")
+  }
+
+  //Effects
+  //Fetch Note and set
+  useEffect(() => {
+    const NotesRequest = async () => {
+      if (editorRef.current && mainRef.current && titleRef.current) {
+        try {
+          const getANote = await axios.get(
+            `http://localhost:5000/api/notes/getANote?noteId=${noteId}`
+          )
+          titleRef.current.value = getANote.data.title
+          setNoteColor(colorCalc(getANote.data.color))
+          const editor = editorRef.current.getEditor()
+          editor.setContents(getANote.data.content)
+          setLoaded(true)
+        } catch (err) {
+          console.log(err)
+        }
+      }
+    }
+    if (editorRef.current && mainRef.current && titleRef.current) {
+      if (userData) {
+        axios.defaults.headers.common[
+          "Authorization"
+        ] = `Bearer ${userData.data.token}`
+        NotesRequest()
+      } else {
+        mainRef.current.innerHTML =
+          "<p>Cannot find note with given ID or user Authentication failed</p>"
+      }
+    }
+  }, [])
+
+  //socket connection
+  useEffect(() => {
+    const s = io("http://localhost:5000")
+    setSocket(s)
+    return () => {
+      s.disconnect()
+    }
+  }, [])
+
+  //connet to a room
+  useEffect(() => {
+    if (editorRef.current && socket) {
+      socket.once("connected-room", (id: string) => {
+        console.log(`Connected with ID:${id}`)
+        setDisable(false)
+      })
+      socket.emit("connect-room", noteId)
+    }
+  }, [socket, noteId])
+
+  //listen to changes and update
+  useEffect(() => {
+    if (socket && editorRef.current && loaded) {
+      const editor = editorRef.current.getEditor()
+      socket.on("receive-changes", (delta: DeltaStatic) => {
+        editor.updateContents(delta, "api")
+      })
+    }
+  }, [socket, loaded])
+
+  const handleEditorChange = (
+    value: string,
+    delta: DeltaStatic,
+    source: Sources
+  ) => {
+    if (socket && editorRef.current && source === "user" && noteId) {
+      socket.emit("send-changes", delta)
+      update(noteId, "content", "", editorRef.current, socket)
+    }
   }
 
   return (
@@ -119,10 +177,10 @@ function Editor() {
         >
           <Box pr={2} pl={2}>
             <Input
+              ref={titleRef}
               variant={"flushed"}
               placeholder="Untitled"
               maxW={"500px"}
-              value={title}
               onChange={handleTitleChange}
               fontWeight={600}
               fontSize={"1.5rem"}
@@ -143,10 +201,11 @@ function Editor() {
           modules={modules}
           formats={formats}
           theme={"snow"}
-          value={note}
           style={{
             backgroundColor: useColorModeValue(noteColor.light, noteColor.dark),
           }}
+          onChange={handleEditorChange}
+          readOnly={disable}
         />
       </Container>
     </>

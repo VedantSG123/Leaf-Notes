@@ -8,6 +8,7 @@ import {
   recoverFromTrash,
   getTrashNotes,
   deletePermanent,
+  updateANote,
 } from "../Controllers/noteControllers"
 
 const router = express.Router()
@@ -19,5 +20,6 @@ router.get("/moveToTrash", protect, moveToTrash)
 router.get("/recoverFromTrash", protect, recoverFromTrash)
 router.get("/getTrashNotes", protect, getTrashNotes)
 router.delete("/deletePermanent", protect, deletePermanent)
+router.put("/updateANote", protect, updateANote)
 
 export default router

@@ -5,7 +5,7 @@ import {
   IoMdUndo,
   IoMdRedo,
 } from "react-icons/io"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { colors, Color } from "./Constants/Colors"
 import "./picker.css"
 
@@ -26,10 +26,18 @@ function SecondaryToolBar({
 }: properties) {
   const { colorMode } = useColorMode()
   const [colorPicker, setColorPicker] = useState(false)
-  const [selected, setSelected] = useState<Color>(noteColor)
+  const [selected, setSelected] = useState<Color>()
   const handlePalleteClick = () => {
     setColorPicker(!colorPicker)
   }
+  const handleColor = (color: Color) => {
+    setSelected(color)
+    setNoteColor(color)
+  }
+
+  useEffect(() => {
+    setSelected(noteColor)
+  }, [noteColor])
   return (
     <>
       <Box display={"flex"} justifyContent={"space-between"} pb={2} pt={2}>
@@ -61,21 +69,21 @@ function SecondaryToolBar({
             style={{ backgroundColor: colorMode === "light" ? "#fff" : "#000" }}
           >
             {colors.map((color, index) => {
-              const handleColor = () => {
-                setSelected(color)
-                setNoteColor(color)
-              }
               return (
                 <div
                   className={
-                    selected.light === color.light ? "selected-color" : ""
+                    selected
+                      ? selected.light === color.light
+                        ? "selected-color"
+                        : ""
+                      : ""
                   }
                   style={{
                     backgroundColor:
                       colorMode === "light" ? color.light : color.dark,
                   }}
                   key={index}
-                  onClick={handleColor}
+                  onClick={() => handleColor(color)}
                 ></div>
               )
             })}
