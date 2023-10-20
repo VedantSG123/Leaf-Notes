@@ -5,6 +5,7 @@ import socketIo from "socket.io"
 import ConnectDB from "./Config/DB"
 import userRoute from "./Routes/userRoute"
 import notesRoute from "./Routes/notesRoute"
+import requestRoute from "./Routes/requestRoute"
 import { Note } from "./Models/noteModel"
 import { notFound, errorHandler } from "./Middleware/errorMiddleware"
 
@@ -38,6 +39,7 @@ app.use(cors())
 
 app.use("/api/user", userRoute)
 app.use("/api/notes", notesRoute)
+app.use("/api/collab", requestRoute)
 app.use(notFound)
 app.use(errorHandler)
 

@@ -120,6 +120,7 @@ function Trash() {
                       trash={() => {
                         recover(index)
                       }}
+                      noteId={note._id}
                       deleteNote={() => deleteNote(index)}
                     />
                   </Box>

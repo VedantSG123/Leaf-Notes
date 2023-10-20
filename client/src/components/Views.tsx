@@ -6,6 +6,7 @@ import Home from "./Home/Home"
 import Notes from "./Notes/Notes"
 import Editor from "./Editor/Editor"
 import Trash from "./Notes/Trash/Trash"
+import Preview from "./Editor/Preview"
 
 const Views = () => {
   return (
@@ -20,6 +21,7 @@ const Views = () => {
         <Route path="edit/:noteId" element={<Editor />} />
         <Route path="editor" element={<Editor />} />
       </Route>
+      <Route path="/preview/:noteId" element={<Preview />}></Route>
     </Routes>
   )
 }

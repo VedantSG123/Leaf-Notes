@@ -28,10 +28,16 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { getUserDataFromLocalStorage, UserData } from "../../Helpers/Verify"
 import { deleteUserDataFromLocalStorage } from "../../Helpers/Verify"
+import RequestBox from "../RequestsBox/RequestBox"
 
 function AppBar() {
   const [user, setUser] = useState<UserData | null>(null)
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const {
+    isOpen: isReqBoxOpen,
+    onOpen: onReqBoxOpen,
+    onClose: onReqBoxClose,
+  } = useDisclosure()
   const navigate = useNavigate()
   useEffect(() => {
     const getUser = () => {
@@ -56,7 +62,7 @@ function AppBar() {
         width={"100%"}
         position={"sticky"}
         top={0}
-        zIndex={100}
+        zIndex={150}
       >
         <Flex h={20} alignItems={"center"} justifyContent={"space-between"}>
           <Flex alignItems={"center"}>
@@ -102,6 +108,9 @@ function AppBar() {
                   <MenuItem onClick={() => navigate("/home/trash")}>
                     Recycle Bin
                   </MenuItem>
+                  <MenuItem onClick={onReqBoxOpen}>
+                    Collaboration Requests
+                  </MenuItem>
                   <MenuItem>Account Settings</MenuItem>
                   <MenuItem onClick={onOpen}>Logout</MenuItem>
                 </MenuList>
@@ -125,6 +134,7 @@ function AppBar() {
             </ModalFooter>
           </ModalContent>
         </Modal>
+        <RequestBox isOpen={isReqBoxOpen} onClose={onReqBoxClose} />
       </Box>
     </>
   )

@@ -28,10 +28,13 @@ interface Request {
   status: string
 }
 
-interface Collaborator {
-  _id: string
-  user: User["_id"]
-  note: Note["_id"]
+type Collaborator = {
+  request: Request
+  senderDetails: {
+    _id: string
+    name: string
+    email: string
+  }
 }
 
 const emptyNote: Note = {

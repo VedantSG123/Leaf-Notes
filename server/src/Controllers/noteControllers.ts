@@ -54,6 +54,34 @@ const getANote = asynchandler(async (req: AuthRequest, res: Response) => {
   }
 })
 
+const getSharedNotes = asynchandler(async (req: AuthRequest, res: Response) => {
+  if (!req.user) {
+    res.status(401)
+    throw new Error("Invalid token")
+  }
+
+  const notes = await Note.find({
+    $or: [
+      {
+        author: req.user._id,
+        isGroupNote: true,
+      },
+      {
+        collaborators: {
+          $in: [req.user._id],
+        },
+      },
+    ],
+  })
+
+  if (!notes) {
+    throw new Error("Internal server error")
+  }
+
+  res.status(200)
+  res.json(notes)
+})
+
 const moveToTrash = asynchandler(async (req: AuthRequest, res: Response) => {
   const noteID = req.query.noteId
 
@@ -161,11 +189,6 @@ const deletePermanent = asynchandler(
 const updateANote = asynchandler(async (req: AuthRequest, res: Response) => {
   const newNote = req.body
   console.log(newNote)
-  // const isCorretType = Note.schema.obj.constructor(req.body) === Object
-  // if (!isCorretType) {
-  //   res.status(400)
-  //   throw new Error("Invalid content format")
-  // }
   const newDoc = new Note(newNote)
   const updatedNote = await Note.findByIdAndUpdate(newDoc._id, newDoc, {
     new: true,
@@ -182,6 +205,7 @@ export {
   createNote,
   getNotes,
   getANote,
+  getSharedNotes,
   moveToTrash,
   recoverFromTrash,
   getTrashNotes,

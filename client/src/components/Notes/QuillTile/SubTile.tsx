@@ -19,17 +19,35 @@ import {
 } from "@chakra-ui/react"
 import { HiUser, HiUserGroup } from "react-icons/hi2"
 import { HiMiniEllipsisVertical } from "react-icons/hi2"
+import UserSearch from "../UserSearch/UserSearch"
 
 interface properties {
   title: string
   isGroup: boolean
   isDeleted: boolean
+  noteId: string
   trash: () => void
   deleteNote: () => void
 }
 
-function SubTile({ title, isGroup, trash, isDeleted, deleteNote }: properties) {
-  const { isOpen, onOpen, onClose } = useDisclosure()
+function SubTile({
+  title,
+  isGroup,
+  trash,
+  isDeleted,
+  deleteNote,
+  noteId,
+}: properties) {
+  const {
+    isOpen: deleteIsOpen,
+    onOpen: deleteOnOpen,
+    onClose: deleteOnClose,
+  } = useDisclosure()
+  const {
+    isOpen: searchIsOpen,
+    onOpen: searchOnOpen,
+    onClose: searchOnClose,
+  } = useDisclosure()
   return (
     <>
       <Box
@@ -66,14 +84,15 @@ function SubTile({ title, isGroup, trash, isDeleted, deleteNote }: properties) {
                   {isDeleted ? "Restore" : "Move to Trash"}
                 </MenuItem>
                 {isDeleted && (
-                  <MenuItem onClick={onOpen}>Delete Permanently</MenuItem>
+                  <MenuItem onClick={deleteOnOpen}>Delete Permanently</MenuItem>
                 )}
+                <MenuItem onClick={searchOnOpen}>Add Collaborator</MenuItem>
               </MenuList>
             </Menu>
           </Box>
         </Box>
       </Box>
-      <Modal onClose={onClose} isOpen={isOpen} isCentered>
+      <Modal onClose={deleteOnClose} isOpen={deleteIsOpen} isCentered>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>
@@ -84,19 +103,25 @@ function SubTile({ title, isGroup, trash, isDeleted, deleteNote }: properties) {
           <ModalFooter>
             <Button
               onClick={() => {
-                onClose()
+                deleteOnClose()
                 deleteNote()
               }}
               variant={"secondary"}
             >
               Delete
             </Button>
-            <Button ml={2} onClick={onClose}>
+            <Button ml={2} onClick={deleteOnClose}>
               Cancel
             </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
+      <UserSearch
+        onClose={searchOnClose}
+        noteId={noteId}
+        noteTitle={title}
+        isOpen={searchIsOpen}
+      />
     </>
   )
 }

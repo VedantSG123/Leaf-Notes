@@ -18,7 +18,7 @@ const protect = asyncHandler(
         token = req.headers.authorization.split(" ")[1]
         const decode: any = jwt.verify(token, process.env.JWT_SECRET as string)
 
-        const user = await User.findOne(decode._id).select("-password")
+        const user = await User.findOne({ _id: decode.id }).select("-password")
         if (!user) {
           res.status(401)
           throw new Error("User not found")

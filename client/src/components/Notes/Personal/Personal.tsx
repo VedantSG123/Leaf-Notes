@@ -113,6 +113,7 @@ function Personal() {
                         moveToTrash(index)
                       }}
                       deleteNote={() => console.log("cannot delete from here")}
+                      noteId={note._id}
                     />
                   </Box>
                 )

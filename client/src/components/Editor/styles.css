@@ -8,6 +8,11 @@
   z-index: 100;
 }
 
+.tool-bar-preview {
+  position: sticky;
+  z-index: 100;
+}
+
 .ql-toolbar {
   border: none !important;
   /* padding: 0 !important; */

@@ -4,6 +4,7 @@ import {
   createNote,
   getNotes,
   getANote,
+  getSharedNotes,
   moveToTrash,
   recoverFromTrash,
   getTrashNotes,
@@ -16,6 +17,7 @@ const router = express.Router()
 router.post("/createNote", protect, createNote)
 router.get("/getNotes", protect, getNotes)
 router.get("/getANote", protect, getANote)
+router.get("/getSharedNotes", protect, getSharedNotes)
 router.get("/moveToTrash", protect, moveToTrash)
 router.get("/recoverFromTrash", protect, recoverFromTrash)
 router.get("/getTrashNotes", protect, getTrashNotes)
