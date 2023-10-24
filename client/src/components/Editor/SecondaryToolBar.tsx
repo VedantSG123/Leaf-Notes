@@ -7,6 +7,7 @@ import {
 } from "react-icons/io"
 import { useState, useEffect } from "react"
 import { colors, Color } from "./Constants/Colors"
+import Collaborators from "./Collaborators/Collaborators"
 import "./picker.css"
 
 interface properties {
@@ -14,6 +15,9 @@ interface properties {
   redo: () => void
   back: () => void
   noteColor: Color
+  noteId: string
+  isOwner: boolean
+  title: string
   setNoteColor: (current: Color) => void
 }
 
@@ -22,7 +26,10 @@ function SecondaryToolBar({
   redo,
   noteColor,
   setNoteColor,
+  noteId,
+  title,
   back,
+  isOwner,
 }: properties) {
   const { colorMode } = useColorMode()
   const [colorPicker, setColorPicker] = useState(false)
@@ -59,6 +66,7 @@ function SecondaryToolBar({
           />
         </Box>
         <Box position={"relative"}>
+          <Collaborators noteId={noteId} isOwner={isOwner} title={title} />
           <Button
             variant={"ghost"}
             leftIcon={<Icon as={IoMdColorPalette} boxSize={5} />}

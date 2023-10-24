@@ -4,7 +4,7 @@ import { AppNote } from "../../Redux/Slices/PersonalSlice"
 const getSharedNotesRequest = async (token: string) => {
   try {
     const getNotes = await axios.get(
-      "http://localhost:5000/api/notes/getSharedNotes",
+      `${import.meta.env.VITE_APIURL}/api/notes/getSharedNotes`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

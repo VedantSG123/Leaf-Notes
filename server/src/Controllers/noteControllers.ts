@@ -40,18 +40,29 @@ const getNotes = asynchandler(async (req: AuthRequest, res: Response) => {
 })
 
 const getANote = asynchandler(async (req: AuthRequest, res: Response) => {
-  const user = req.user?.id
+  if (!req.user) {
+    res.status(401)
+    throw new Error("Invalid token")
+  }
   const noteId = req.query.noteId
   const note = await Note.findOne({
     _id: noteId,
   })
-  if (note) {
-    res.status(201)
-    res.json(note)
-  } else {
-    res.status(400)
-    throw new Error("Failed to get the note")
+  if (!note) {
+    res.status(404)
+    throw new Error("Cannot find the note with specified ID")
   }
+
+  if (
+    note.author.toString() !== req.user._id.toString() &&
+    !note.collaborators.includes(req.user._id)
+  ) {
+    res.sendStatus(403)
+    throw new Error("Not authorized to view/edit this note")
+  }
+
+  res.status(200)
+  res.json(note)
 })
 
 const getSharedNotes = asynchandler(async (req: AuthRequest, res: Response) => {

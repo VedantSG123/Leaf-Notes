@@ -26,6 +26,7 @@ function Editor() {
   const [disable, setDisable] = useState(true)
   const [noteColor, setNoteColor] = useState<Color>(colorCalc("#e8eaed"))
   const [socket, setSocket] = useState<Socket>()
+  const [owner, setOwner] = useState(false)
   const userData = getUserDataFromLocalStorage()
   const navigate = useNavigate()
 
@@ -98,12 +99,13 @@ function Editor() {
       if (editorRef.current && mainRef.current && titleRef.current) {
         try {
           const getANote = await axios.get(
-            `http://localhost:5000/api/notes/getANote?noteId=${noteId}`
+            `${import.meta.env.VITE_APIURL}/api/notes/getANote?noteId=${noteId}`
           )
           titleRef.current.value = getANote.data.title
           setNoteColor(colorCalc(getANote.data.color))
           const editor = editorRef.current.getEditor()
           editor.setContents(getANote.data.content)
+          setOwner(getANote.data.author.toString() === userData?.data._id)
           setLoaded(true)
         } catch (err) {
           console.log(err)
@@ -125,7 +127,7 @@ function Editor() {
 
   //socket connection
   useEffect(() => {
-    const s = io("http://localhost:5000")
+    const s = io(`${import.meta.env.VITE_APIURL}`)
     setSocket(s)
     return () => {
       s.disconnect()
@@ -192,6 +194,9 @@ function Editor() {
             back={handleBack}
             noteColor={noteColor}
             setNoteColor={handleColorChange}
+            noteId={noteId as string}
+            isOwner={owner}
+            title={titleRef.current?.value as string}
           />
           <CustomToolbar />
         </Box>

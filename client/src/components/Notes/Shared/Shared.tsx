@@ -12,11 +12,14 @@ import TileSkeleton from "../TileSkeleton/TileSkeleton"
 
 function Shared() {
   const [renderArray, setRenderArray] = useState<AppNote[]>()
+  const [userId, setUserId] = useState<string>("")
   const loaderCount = Array.from({ length: 10 }, (_, index) => index + 1)
   const ParentRef = useRef<HTMLDivElement>(null!)
   const navigate = useNavigate()
   useEffect(() => {
     const userData = getUserDataFromLocalStorage()
+    if (!userData) return
+    setUserId(userData?.data._id.toString())
     const getNotes = async (token: string) => {
       try {
         const notes = await getSharedNotesRequest(token)
@@ -82,6 +85,8 @@ function Shared() {
                       }}
                       deleteNote={() => console.log("cannot delete from here")}
                       noteId={note._id}
+                      author={note.author}
+                      userId={userId}
                     />
                   </Box>
                 )

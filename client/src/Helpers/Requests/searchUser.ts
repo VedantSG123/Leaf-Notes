@@ -19,7 +19,7 @@ const search = debounce(
     }
     try {
       const res = await axios.get(
-        `http://localhost:5000/api/user?search=${query}`,
+        `${import.meta.env.VITE_APIURL}/api/user?search=${query}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

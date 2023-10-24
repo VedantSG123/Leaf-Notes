@@ -14,11 +14,13 @@ import TileSkeleton from "../TileSkeleton/TileSkeleton"
 
 function Trash() {
   const [renderArray, setRenderArray] = useState<AppNote[]>()
+  const [userId, setUserId] = useState("")
   const loaderCount = Array.from({ length: 10 }, (_, index) => index + 1)
   const ParentRef = useRef<HTMLDivElement>(null!)
   const navigate = useNavigate()
   useEffect(() => {
     const userData = getUserDataFromLocalStorage()
+    setUserId(userData?.data._id as string)
     const getNotes = async (token: string) => {
       try {
         const notes = await getTrashNotesRequest(token)
@@ -122,6 +124,8 @@ function Trash() {
                       }}
                       noteId={note._id}
                       deleteNote={() => deleteNote(index)}
+                      author={note.author}
+                      userId={userId}
                     />
                   </Box>
                 )

@@ -4,7 +4,7 @@ import { AppNote } from "../../Redux/Slices/PersonalSlice"
 const getTrashNotesRequest = async (token: string) => {
   try {
     const getNotes = await axios.get(
-      "http://localhost:5000/api/notes/getTrashNotes",
+      `${import.meta.env.VITE_APIURL}/api/notes/getTrashNotes`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

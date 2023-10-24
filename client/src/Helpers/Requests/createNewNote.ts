@@ -2,7 +2,7 @@ import axios from "axios"
 const createNewNoteRequest = async (token: string) => {
   try {
     const newNote = await axios.post(
-      "http://localhost:5000/api/notes/createNote",
+      `${import.meta.env.VITE_APIURL}/api/notes/createNote`,
       {
         title: "",
         content: {

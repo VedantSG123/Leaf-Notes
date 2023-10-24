@@ -28,6 +28,12 @@ interface Request {
   status: string
 }
 
+type Account = {
+  _id: string
+  name: string
+  email: string
+}
+
 type Collaborator = {
   request: Request
   senderDetails: {
@@ -49,5 +55,5 @@ const emptyNote: Note = {
   author: "",
 }
 
-export type { Note, User, Request, Collaborator }
+export type { Note, User, Request, Collaborator, Account }
 export { emptyNote }

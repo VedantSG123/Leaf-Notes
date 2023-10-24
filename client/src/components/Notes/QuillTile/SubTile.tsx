@@ -26,6 +26,8 @@ interface properties {
   isGroup: boolean
   isDeleted: boolean
   noteId: string
+  author: string
+  userId: string
   trash: () => void
   deleteNote: () => void
 }
@@ -37,6 +39,8 @@ function SubTile({
   isDeleted,
   deleteNote,
   noteId,
+  userId,
+  author,
 }: properties) {
   const {
     isOpen: deleteIsOpen,
@@ -86,7 +90,9 @@ function SubTile({
                 {isDeleted && (
                   <MenuItem onClick={deleteOnOpen}>Delete Permanently</MenuItem>
                 )}
-                <MenuItem onClick={searchOnOpen}>Add Collaborator</MenuItem>
+                <MenuItem isDisabled={author !== userId} onClick={searchOnOpen}>
+                  Add Collaborator
+                </MenuItem>
               </MenuList>
             </Menu>
           </Box>

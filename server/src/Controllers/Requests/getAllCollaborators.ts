@@ -26,6 +26,11 @@ const getAllCollaborators = asynchandler(
     const userArray = await User.find({ _id: { $in: collaborators } }).select(
       "-password"
     )
+    const author = await User.findById(note.author).select("-password")
+    if (!author) {
+      throw new Error("Internal Server error")
+    }
+    userArray.push(author)
     res.status(200).json(userArray)
   }
 )
