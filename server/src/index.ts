@@ -35,7 +35,7 @@ const corsOptions: CorsOptions = {
 
 const app = express()
 app.use(express.json())
-app.use(cors())
+app.use(cors(corsOptions))
 
 app.use("/api/user", userRoute)
 app.use("/api/notes", notesRoute)
