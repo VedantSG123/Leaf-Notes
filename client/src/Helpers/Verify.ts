@@ -11,8 +11,6 @@ interface UserData {
   data: data
 }
 
-const api = import.meta.env.VITE_APIURL
-
 const getUserDataFromLocalStorage = (): UserData | null => {
   const userDataString = localStorage.getItem("userInfo")
   if (userDataString) {
@@ -30,11 +28,11 @@ const deleteUserDataFromLocalStorage = () => {
 
 const verify = async () => {
   const userData = getUserDataFromLocalStorage()
-  console.log(api)
+
   if (userData) {
     try {
       const response: AxiosResponse = await axios.get(
-        `${api}/api/user/verify`,
+        `${import.meta.env.VITE_APIURL}/api/user/verify`,
         {
           headers: {
             Authorization: `Bearer ${userData.data.token}`,
