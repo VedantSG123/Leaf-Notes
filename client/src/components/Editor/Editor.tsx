@@ -145,7 +145,7 @@ function Editor() {
     }
   }, [socket, noteId])
 
-  //listen to changes and update
+  //listen to changes and update (for every user)
   useEffect(() => {
     if (socket && editorRef.current && loaded) {
       const editor = editorRef.current.getEditor()
