@@ -4,7 +4,7 @@ interface properties extends UserRes {
   tileClick: () => void
 }
 
-function UserDisplayTile({ name, email, _id, tileClick }: properties) {
+function UserDisplayTile({ name, email, tileClick }: properties) {
   const bg = useColorModeValue("secondary.50", "tertiary.900")
 
   return (

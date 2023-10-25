@@ -156,7 +156,7 @@ function Editor() {
   }, [socket, loaded])
 
   const handleEditorChange = (
-    value: string,
+    _value: string,
     delta: DeltaStatic,
     source: Sources
   ) => {

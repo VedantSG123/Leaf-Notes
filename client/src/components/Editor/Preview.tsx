@@ -35,7 +35,7 @@ function Preview() {
     }
   }
 
-  const sendRequest = useAxios<Note>({
+  useAxios<Note>({
     url: `${import.meta.env.VITE_APIURL}/api/collab/preview?noteId=${noteId}`,
     method: "get",
     headers: {
