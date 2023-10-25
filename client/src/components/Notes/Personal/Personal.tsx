@@ -35,7 +35,7 @@ function Personal() {
     } else {
       navigate("/login")
     }
-  }, [renderArray])
+  }, [])
 
   const createNewNote = async () => {
     const userData = getUserDataFromLocalStorage()

@@ -33,7 +33,7 @@ function Shared() {
     } else {
       navigate("/login")
     }
-  }, [renderArray])
+  }, [])
 
   const moveToTrash = async (index: number) => {
     const userData = getUserDataFromLocalStorage()

@@ -50,7 +50,7 @@ const useAxios = <T>({
 
   useEffect(() => {
     fetchData()
-  }, [method, url, body, headers])
+  }, [])
 
   return { response, error, loading }
 }
