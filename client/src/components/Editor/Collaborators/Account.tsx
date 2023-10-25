@@ -20,6 +20,7 @@ import { AxiosResponse } from "axios"
 import { Account as AccountType } from "../../../Helpers/Types"
 import { getUserDataFromLocalStorage } from "../../../Helpers/Verify"
 import useButtonAxios from "../../../Helpers/Hooks/useButtonAxios"
+import { useState } from "react"
 
 interface properties extends AccountType {
   isOwner: boolean
@@ -30,6 +31,7 @@ interface properties extends AccountType {
 function Account({ name, email, _id, isOwner, isAuthor, noteId }: properties) {
   const bg = useColorModeValue("secondary.50", "tertiary.900")
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const [disappear, setDisappear] = useState<"flex" | "none">("flex")
   const toast = useToast()
   const token = getUserDataFromLocalStorage()?.data.token
 
@@ -42,6 +44,7 @@ function Account({ name, email, _id, isOwner, isAuthor, noteId }: properties) {
           isClosable: true,
           status: "success",
         })
+        setDisappear("none")
         onClose()
       }
     } else {
@@ -70,7 +73,7 @@ function Account({ name, email, _id, isOwner, isAuthor, noteId }: properties) {
   return (
     <>
       <Box
-        display={"flex"}
+        display={disappear}
         alignItems={"center"}
         backgroundColor={bg}
         borderRadius={8}

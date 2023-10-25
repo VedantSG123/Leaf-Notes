@@ -8,6 +8,7 @@ import {
 } from "@chakra-ui/react"
 import { Link } from "react-router-dom"
 import { ExternalLinkIcon } from "@chakra-ui/icons"
+import { useState } from "react"
 import { Collaborator } from "../../Helpers/Types"
 import { AxiosResponse } from "axios"
 import useButtonAxios from "../../Helpers/Hooks/useButtonAxios"
@@ -19,6 +20,7 @@ type properties = {
 
 export default function RequestTile({ collaborator }: properties) {
   const bg = useColorModeValue("secondary.50", "tertiary.900")
+  const [disappear, setDisappear] = useState<"flex" | "none" | "block">("block")
   const token = getUserDataFromLocalStorage()?.data.token
   const toast = useToast()
 
@@ -31,6 +33,7 @@ export default function RequestTile({ collaborator }: properties) {
           isClosable: true,
           status: "success",
         })
+        setDisappear("none")
       }
     } else {
       toast({
@@ -68,7 +71,14 @@ export default function RequestTile({ collaborator }: properties) {
 
   return (
     <>
-      <Box backgroundColor={bg} borderRadius={16} p={4} width={"100%"} mt={2}>
+      <Box
+        backgroundColor={bg}
+        borderRadius={16}
+        p={4}
+        width={"100%"}
+        mt={2}
+        display={disappear}
+      >
         <Box>
           <Tag borderRadius="full" colorScheme="teal">
             From
