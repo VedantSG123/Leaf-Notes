@@ -20,17 +20,21 @@ const FRONTEND = process.env.FRONTEND_ORIGIN
 const whitelist = ["http://127.0.0.1:5173", FRONTEND]
 
 // Set up CORS options
+// const corsOptions: CorsOptions = {
+//   origin: (
+//     origin: string | undefined,
+//     callback: (err: Error | null, allow?: boolean) => void
+//   ) => {
+//     if (origin && whitelist.includes(origin)) {
+//       callback(null, true)
+//     } else {
+//       callback(new Error("Not allowed by CORS"))
+//     }
+//   },
+// }
+
 const corsOptions: CorsOptions = {
-  origin: (
-    origin: string | undefined,
-    callback: (err: Error | null, allow?: boolean) => void
-  ) => {
-    if (origin && whitelist.includes(origin)) {
-      callback(null, true)
-    } else {
-      callback(new Error("Not allowed by CORS"))
-    }
-  },
+  origin: "*",
 }
 
 const app = express()
@@ -50,7 +54,7 @@ const server = app.listen(PORT, () => {
 const io = new socketIo.Server(server, {
   /* options */
   cors: {
-    origin: FRONTEND,
+    origin: "*",
   },
 })
 
