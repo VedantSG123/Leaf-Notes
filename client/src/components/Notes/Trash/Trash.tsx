@@ -34,7 +34,7 @@ function Trash() {
     } else {
       navigate("/login")
     }
-  }, [renderArray])
+  }, [])
 
   const recover = async (index: number) => {
     const userData = getUserDataFromLocalStorage()
