@@ -65,6 +65,9 @@ io.on("connection", (socket) => {
     socket.on("send-changes", (delta) => {
       socket.broadcast.to(id).emit("receive-changes", delta)
     })
+    socket.on("title-change", (title) => {
+      socket.broadcast.to(id).emit("receive-title-change", title)
+    })
     socket.on("save-changes", async (payload) => {
       try {
         const updatedNote = await Note.findByIdAndUpdate(

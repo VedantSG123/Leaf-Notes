@@ -84,6 +84,7 @@ function Editor() {
 
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (socket && editorRef.current && noteId && titleRef.current) {
+      socket.emit("title-change", titleRef.current.value)
       update(noteId, "title", event.target.value, editorRef.current, socket)
     }
   }
@@ -137,8 +138,7 @@ function Editor() {
   //connet to a room
   useEffect(() => {
     if (editorRef.current && socket) {
-      socket.once("connected-room", (id: string) => {
-        console.log(`Connected with ID:${id}`)
+      socket.once("connected-room", (_id: string) => {
         setDisable(false)
       })
       socket.emit("connect-room", noteId)
@@ -154,6 +154,17 @@ function Editor() {
       })
     }
   }, [socket, loaded])
+
+  //reveive title changes
+  useEffect(() => {
+    if (socket && titleRef.current && loaded) {
+      socket.on("receive-title-change", (title: string) => {
+        if (titleRef.current) {
+          titleRef.current.value = title
+        }
+      })
+    }
+  })
 
   const handleEditorChange = (
     _value: string,

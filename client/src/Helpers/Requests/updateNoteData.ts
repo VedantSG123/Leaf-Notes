@@ -15,12 +15,10 @@ const update = debounce(
       const editor = quillInstance.getEditor()
       const content = editor.getContents()
       socket.emit("save-changes", { id: id, field: field, data: content })
-      console.log("saved")
     } else if (field === "color") {
       socket.emit("save-changes", { id: id, field: field, data: data })
     } else if (field === "title") {
       socket.emit("save-changes", { id: id, field: field, data: data })
-      console.log("title-change")
     } else {
       console.log("invalid req")
     }
